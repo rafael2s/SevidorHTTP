@@ -1,6 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
-using System.Net.Sockets;   
+using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 
 class ServidorHttp{
     private TcpListener Controlador { get; set; }
@@ -41,7 +46,7 @@ class ServidorHttp{
                 .Replace((char)0, ' ').Trim();
             if(textoRequisicao.Length > 0){
                 Console.WriteLine($"\n{textoRequisicao}\n");
-                var bytesConteudo = Encoding.UTF8.GetBytes(this.HtmlConteudo, 0, this.HtmlConteudo.Length);
+                var bytesConteudo = LerArquivo("/index.html");
                 var bytesCabecalho = GerarCabecalho("HTTP/1.1", "text/html;charset=utf-8", "200", bytesConteudo.Length);
                 int bytesEnviados = conexao.Send(bytesCabecalho, bytesCabecalho.Length, 0);
                 bytesEnviados += conexao.Send(bytesConteudo, bytesConteudo.Length, 0);
@@ -68,5 +73,14 @@ class ServidorHttp{
         html.Append("<title>Página Teste 01</title></head><body>");
         html.Append("<h1>Página Teste 01</h1></body></html>");
         this.HtmlConteudo = html.ToString();
+    }
+
+    public byte[] LerArquivo(string recurso){
+        string diretorio = "C:\\dev\\ProjetosCsharp\\ServidorHTTP\\wwww";
+        string caminhoArquivo = diretorio + recurso.Replace("/", "\\");
+        if(File.Exists(caminhoArquivo)){
+           return File.ReadAllBytes(caminhoArquivo); 
+        }else
+            return new byte[0];
     }
 }
