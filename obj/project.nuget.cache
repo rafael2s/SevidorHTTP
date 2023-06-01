@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Yct1uqLHdiczAtgX7yz9ZdQbKRJWkoGz9LmfD0F2zGMk3ZSlE1/ptuFrfalpSG/78548QbT8hZnP0QpmkmhyOA==",
+  "dgSpecHash": "JVJHSJWVkTbhkrxA4uhF95GrLBC80h1vkAg7DKZs3NFauRRnGv2WEgsiUkzTqaNzvm9Bs+tGfYeeo/PNAN4jtQ==",
   "success": true,
-  "projectFilePath": "C:\\dev\\ProjetosCsharp\\ServidorHTTP\\ServidorHTTP.csproj",
+  "projectFilePath": "C:\\dev\\SevidorHTTP\\ServidorHTTP.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

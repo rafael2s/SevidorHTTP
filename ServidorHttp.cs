@@ -46,8 +46,21 @@ class ServidorHttp{
                 .Replace((char)0, ' ').Trim();
             if(textoRequisicao.Length > 0){
                 Console.WriteLine($"\n{textoRequisicao}\n");
-                var bytesConteudo = LerArquivo("/index.html");
-                var bytesCabecalho = GerarCabecalho("HTTP/1.1", "text/html;charset=utf-8", "200", bytesConteudo.Length);
+
+                //Criando metodo pra buscar GET
+                string[] linhas = textoRequisicao.Split("\r\n"); //Dividindo o texto em varias lin"ha (Ex.:"GET /index.html HTTP/1.1")
+                int iPrimeiroEspaco = linhas[0].IndexOf(' '); //Captura o 1º caracter de espaço(' ')
+                int iSegundoEspaco = linhas[0].LastIndexOf(' ');//Captura o ultimo caracter de espaço(' ') nesse caso o 2º
+                string metodoHttp = linhas[0].Substring(0, iPrimeiroEspaco); //Extraindo o metodo HTTP que está na lina '0'
+                string recursoBuscado = linhas[0].Substring(iPrimeiroEspaco +1, iSegundoEspaco - iPrimeiroEspaco - 1); // Extraindo o nome do recurso buscado.
+                string versaoHttp = linhas[0].Substring(iSegundoEspaco + 1); //Pegando  versão do protocolo Http
+
+                iPrimeiroEspaco = linhas[1].IndexOf(' ');
+                string nomeHost = linhas[2].Substring(iPrimeiroEspaco + 1 ); //capturando o nome do host
+
+
+                var bytesConteudo = LerArquivo(recursoBuscado);
+                var bytesCabecalho = GerarCabecalho(versaoHttp, "text/html;charset=utf-8", "200", bytesConteudo.Length);
                 int bytesEnviados = conexao.Send(bytesCabecalho, bytesCabecalho.Length, 0);
                 bytesEnviados += conexao.Send(bytesConteudo, bytesConteudo.Length, 0);
                 conexao.Close();
@@ -76,7 +89,8 @@ class ServidorHttp{
     }
 
     public byte[] LerArquivo(string recurso){
-        string diretorio = "C:\\dev\\ProjetosCsharp\\ServidorHTTP\\wwww";
+        //string diretorio = "C:\\dev\\ProjetosCsharp\\ServidorHTTP\\wwww";
+        string diretorio = "C:\\dev\\SevidorHTTP\\www";        
         string caminhoArquivo = diretorio + recurso.Replace("/", "\\");
         if(File.Exists(caminhoArquivo)){
            return File.ReadAllBytes(caminhoArquivo); 
