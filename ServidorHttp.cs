@@ -58,9 +58,15 @@ class ServidorHttp{
                 iPrimeiroEspaco = linhas[1].IndexOf(' ');
                 string nomeHost = linhas[2].Substring(iPrimeiroEspaco + 1 ); //capturando o nome do host
 
-
+                byte[] bytesCabecalho = null;
                 var bytesConteudo = LerArquivo(recursoBuscado);
-                var bytesCabecalho = GerarCabecalho(versaoHttp, "text/html;charset=utf-8", "200", bytesConteudo.Length);
+                if(bytesConteudo.Length > 0){
+                    bytesCabecalho = GerarCabecalho(versaoHttp, "text/html;charset=utf-8", "200", bytesConteudo.Length);
+                }else{
+                    bytesConteudo = Encoding.UTF8.GetBytes("<h1>ERRO 404 - Arquivo não encontrado</h1>");
+                    bytesCabecalho = GerarCabecalho(versaoHttp, "text/html;charset=utf-8", "404", bytesConteudo.Length);
+                }
+
                 int bytesEnviados = conexao.Send(bytesCabecalho, bytesCabecalho.Length, 0);
                 bytesEnviados += conexao.Send(bytesConteudo, bytesConteudo.Length, 0);
                 conexao.Close();
